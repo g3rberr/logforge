@@ -6,8 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.security import decode_token
 from database.clickhouse import ClickHouseClient, ch_client
-from database.postgres import get_session
+from database.postgres import get_session as _get_session
 from models.postgres_models import User
+
+get_session = _get_session
+__all__ = ["get_ch", "get_current_user", "get_session"]
 
 
 async def get_ch() -> AsyncGenerator[ClickHouseClient, None]:

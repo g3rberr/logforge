@@ -12,7 +12,7 @@ router = APIRouter(prefix="/analytics", tags=["analytics"])
 
 
 @router.get("/logs", response_model=list[LogEntryRead])
-async def search_logs(  # noqa: ANN201
+async def search_logs(
     project_id: str = Query(...),
     level: str | None = None,
     source: str | None = None,
@@ -22,7 +22,7 @@ async def search_logs(  # noqa: ANN201
     current_user: User = Depends(get_current_user),  # noqa: B008
     session: AsyncSession = Depends(get_session),  # noqa: B008
     ch: ClickHouseClient = Depends(get_ch),  # noqa: B008
-):
+) -> list[LogEntryRead]:
     result = await session.execute(
         select(Project).where(Project.id == project_id, Project.owner_id == current_user.id)
     )
@@ -36,12 +36,12 @@ async def search_logs(  # noqa: ANN201
 
 
 @router.get("/stats", response_model=LogEntryStats)
-async def get_stats(  # noqa: ANN201
+async def get_stats(
     project_id: str = Query(...),
     current_user: User = Depends(get_current_user),  # noqa: B008
     session: AsyncSession = Depends(get_session),  # noqa: B008
     ch: ClickHouseClient = Depends(get_ch),  # noqa: B008
-):
+) -> LogEntryStats:
     result = await session.execute(
         select(Project).where(Project.id == project_id, Project.owner_id == current_user.id)
     )
