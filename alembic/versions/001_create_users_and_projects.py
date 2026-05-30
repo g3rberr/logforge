@@ -7,9 +7,10 @@ Create Date: 2026-05-31
 
 from collections.abc import Sequence
 
-from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import UUID
+
+from alembic import op
 
 revision: str = "001"
 down_revision: str | None = None
@@ -35,7 +36,8 @@ def upgrade() -> None:
     op.create_table(
         "projects",
         sa.Column("id", UUID(as_uuid=False), primary_key=True),
-        sa.Column("owner_id", UUID(as_uuid=False), nullable=False, index=True),
+        sa.Column("owner_id", UUID(as_uuid=False), sa.ForeignKey("users.id"),
+                   nullable=False, index=True),
         sa.Column("name", sa.String(255), nullable=False),
         sa.Column("description", sa.Text, nullable=True),
         sa.Column("api_key", sa.String(64), unique=True, nullable=False),

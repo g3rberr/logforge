@@ -1,6 +1,5 @@
 from datetime import UTC, datetime, timedelta
-
-from typing import cast
+from typing import Any, cast
 
 import bcrypt
 from jose import JWTError, jwt
@@ -18,13 +17,16 @@ def verify_password(plain: str, hashed: str) -> bool:
 
 def create_token(user_id: str) -> str:
     expire = datetime.now(UTC) + timedelta(minutes=settings.jwt_expire_minutes)
-    payload: dict = {"sub": user_id, "exp": expire}
+    payload: dict[str, Any] = {"sub": user_id, "exp": expire}
     return cast(str, jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm))
 
 
 def decode_token(token: str) -> str | None:
     try:
-        payload = cast(dict, jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm]))
+        payload = cast(
+            dict[str, Any],
+            jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm]),
+        )
         return cast(str | None, payload.get("sub"))
     except JWTError:
         return None
