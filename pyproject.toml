@@ -51,6 +51,10 @@ no_implicit_reexport = true
 disallow_untyped_defs = true
 disallow_any_unimported = true
 
+[[tool.mypy.overrides]]
+module = "clickhouse_driver"
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
