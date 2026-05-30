@@ -44,6 +44,7 @@ select = ["E", "F", "I", "N", "W", "UP", "ANN", "B", "SIM", "C4", "T20"]
 [tool.mypy]
 strict = true
 python_version = "3.11"
+mypy_path = "src"
 warn_unused_configs = true
 warn_redundant_casts = true
 warn_unused_ignores = true
