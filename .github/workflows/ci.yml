@@ -15,8 +15,8 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install .[dev]
-      - run: ruff check src/
-      - run: ruff format --check src/
+      - run: ruff check src/ tests/
+      - run: ruff format --check src/ tests/
 
   typecheck:
     runs-on: ubuntu-latest
@@ -47,13 +47,5 @@ jobs:
       - run: pip install .[dev]
       - run: pytest tests/ -v --cov=src
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-          POSTGRES_DB: logforge
-          JWT_SECRET_KEY: test-secret
-          JWT_ALGORITHM: HS256
-          ACCESS_TOKEN_EXPIRE_MINUTES: "30"
-          CLICKHOUSE_HOST: localhost
-          CLICKHOUSE_PORT: "9000"
+          POSTGRES_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/logforge
+          JWT_SECRET: test-secret
