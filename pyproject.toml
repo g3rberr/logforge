@@ -57,7 +57,7 @@ disallow_untyped_defs = true
 disallow_any_unimported = true
 
 [[tool.mypy.overrides]]
-module = "clickhouse_driver"
+module = ["clickhouse_driver", "jose"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

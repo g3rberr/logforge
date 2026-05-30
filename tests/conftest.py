@@ -1,10 +1,14 @@
 import asyncio
+import sys
 from collections.abc import AsyncGenerator, Generator
+from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
+
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from api.dependencies import get_ch
 from main import app
