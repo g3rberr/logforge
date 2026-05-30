@@ -39,10 +39,7 @@ target-version = "py311"
 line-length = 100
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "N", "W", "D", "UP", "ANN", "B", "SIM", "C4", "T20"]
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"
+select = ["E", "F", "I", "N", "W", "UP", "ANN", "B", "SIM", "C4", "T20"]
 
 [tool.mypy]
 strict = true
