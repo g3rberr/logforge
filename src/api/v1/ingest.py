@@ -1,12 +1,12 @@
-from database.clickhouse import ClickHouseClient
 from fastapi import APIRouter, Depends, Header, HTTPException
-from models.clickhouse_models import LogEntry
-from models.postgres_models import Project
-from schemas.log import LogEntryCreate, LogEntryRead
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies import get_ch, get_session
+from database.clickhouse import ClickHouseClient
+from models.clickhouse_models import LogEntry
+from models.postgres_models import Project
+from schemas.log import LogEntryCreate, LogEntryRead
 
 router = APIRouter(prefix="/ingest", tags=["ingest"])
 

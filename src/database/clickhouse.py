@@ -28,7 +28,7 @@ class ClickHouseClient:
             self._client = None
 
     @property
-    def client(self) -> Any:
+    def client(self) -> Any:  # noqa: ANN401
         if self._client is None:
             raise RuntimeError("ClickHouse not connected")
         return self._client

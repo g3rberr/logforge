@@ -1,5 +1,3 @@
-"""Асинхронный движок и сессия PostgreSQL."""
-
 from collections.abc import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import (
@@ -17,11 +15,10 @@ session_factory = async_sessionmaker(engine, class_=AsyncSession, expire_on_comm
 
 
 class Base(DeclarativeBase):
-    """Базовый класс для всех PostgreSQL моделей."""
+    pass
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
-    """FastAPI Depends: выдаёт сессию, закрывает при выходе."""
     async with session_factory() as session:
         try:
             yield session

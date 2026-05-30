@@ -1,12 +1,13 @@
 from collections.abc import AsyncGenerator
 
+from fastapi import Depends, Header, HTTPException
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from core.security import decode_token
 from database.clickhouse import ClickHouseClient, ch_client
 from database.postgres import get_session
-from fastapi import Depends, Header, HTTPException
 from models.postgres_models import User
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 
 async def get_ch() -> AsyncGenerator[ClickHouseClient, None]:

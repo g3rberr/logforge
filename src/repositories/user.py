@@ -1,6 +1,6 @@
-from models.postgres_models import User
 from sqlalchemy import select
 
+from models.postgres_models import User
 from repositories.base import BaseRepository
 
 

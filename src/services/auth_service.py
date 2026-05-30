@@ -1,10 +1,11 @@
 import logging
 
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from core.security import create_token, hash_password, verify_password
 from models.postgres_models import Project, User
 from schemas.user import UserCreate
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = logging.getLogger(__name__)
 
