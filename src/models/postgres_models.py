@@ -2,11 +2,9 @@ from datetime import datetime
 from uuid import uuid4
 
 from sqlalchemy import DateTime, ForeignKey, String, Text, Uuid, func
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-
-class Base(DeclarativeBase):
-    pass
+from database.postgres import Base
 
 
 class User(Base):
