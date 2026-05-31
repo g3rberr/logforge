@@ -2,7 +2,7 @@ import asyncio
 import sys
 from collections.abc import AsyncGenerator, Generator
 from pathlib import Path
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock
 
 import pytest
 import pytest_asyncio
@@ -23,9 +23,9 @@ def event_loop() -> Generator[asyncio.AbstractEventLoop, None, None]:
 
 @pytest_asyncio.fixture
 async def client() -> AsyncGenerator[AsyncClient, None]:
-    mock_ch = MagicMock()
+    mock_ch = AsyncMock()
 
-    async def override_get_ch() -> AsyncGenerator[MagicMock, None]:
+    async def override_get_ch() -> AsyncGenerator[AsyncMock, None]:
         yield mock_ch
 
     app.dependency_overrides[get_ch] = override_get_ch

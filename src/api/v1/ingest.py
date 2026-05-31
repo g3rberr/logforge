@@ -37,7 +37,7 @@ async def ingest(
 
     row = entry.to_dict()
     row["metadata"] = json.dumps(row["metadata"])
-    ch.insert(LogEntry.__table__, [row])
+    await ch.insert(LogEntry.__table__, [row])
 
     return LogEntryRead(
         id=entry.id,
