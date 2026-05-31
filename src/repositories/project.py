@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from sqlalchemy import select, update
+from sqlalchemy import select
 
 from models.postgres_models import Project
 from repositories.base import BaseRepository
@@ -17,10 +17,10 @@ class ProjectRepository(BaseRepository[Project]):
         return result.scalar_one_or_none()
 
     async def regenerate_api_key(self, project_id: str) -> str | None:
-        new_key = uuid4().hex
-        stmt = update(Project).where(Project.id == project_id).values(api_key=new_key)
-        result = await self.session.execute(stmt)
-        if result.rowcount == 0:  # type: ignore[attr-defined]
+        project = await self.get(project_id)
+        if project is None:
             return None
+        project.api_key = uuid4().hex
         await self.session.flush()
-        return new_key
+        await self.session.refresh(project)
+        return project.api_key
