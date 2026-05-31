@@ -1,4 +1,8 @@
+import logging
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+logger = logging.getLogger(__name__)
 
 
 class Settings(BaseSettings):
@@ -10,13 +14,18 @@ class Settings(BaseSettings):
     clickhouse_user: str = "default"
     clickhouse_password: str = ""
     clickhouse_database: str = "logforge"
-    redis_url: str = "redis://localhost:6379/0"
     jwt_secret: str = "change-me-in-production"
     jwt_algorithm: str = "HS256"
     jwt_expire_minutes: int = 1440
     api_prefix: str = "/api/v1"
     cors_origins: list[str] = ["*"]
     debug: bool = False
+
+
+settings = Settings()
+
+if settings.jwt_secret == "change-me-in-production":
+    logger.warning("jwt_secret is set to the default value; change it in production")
 
 
 settings = Settings()
