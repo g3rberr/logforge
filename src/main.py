@@ -5,6 +5,7 @@ from api.v1.analytics import router as analytics_router
 from api.v1.auth import router as auth_router
 from api.v1.ingest import router as ingest_router
 from api.v1.projects import router as projects_router
+from api.v1.users import router as users_router
 from core.config import settings
 from database.clickhouse import ch_client
 
@@ -33,3 +34,4 @@ app.include_router(auth_router, prefix="/api/v1")
 app.include_router(ingest_router, prefix="/api/v1")
 app.include_router(analytics_router, prefix="/api/v1")
 app.include_router(projects_router, prefix="/api/v1")
+app.include_router(users_router, prefix="/api/v1")
