@@ -10,9 +10,7 @@ services:
       postgres:
         condition: service_healthy
       clickhouse:
-        condition: service_started
-      redis:
-        condition: service_started
+        condition: service_healthy
 
   postgres:
     image: postgres:16-alpine
@@ -30,9 +28,6 @@ services:
       timeout: 3s
       retries: 5
 
-volumes:
-  pgdata:
-
   clickhouse:
     image: clickhouse/clickhouse-server:24-alpine
     ports:
@@ -40,8 +35,13 @@ volumes:
       - "9000:9000"
     volumes:
       - ./docker/clickhouse.init.sql:/docker-entrypoint-initdb.d/init.sql
+      - chdata:/var/lib/clickhouse
+    healthcheck:
+      test: ["CMD-SHELL", "clickhouse-client --query 'SELECT 1'"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
+volumes:
+  pgdata:
+  chdata:

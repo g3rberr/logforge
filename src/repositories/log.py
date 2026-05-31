@@ -87,9 +87,10 @@ class LogRepository:
 
         where = " AND ".join(conditions)
 
-        total = self._ch.execute(
+        count_result = self._ch.execute(
             f"SELECT count() as cnt FROM {LogEntry.__table__} WHERE {where}", params
-        )[0]["cnt"]
+        )
+        total = count_result[0]["cnt"] if count_result else 0
 
         by_level = self._ch.execute(
             f"SELECT level, count() as cnt FROM {LogEntry.__table__} WHERE {where} GROUP BY level",

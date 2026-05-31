@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.security import create_token, hash_password, verify_password
-from models.postgres_models import Project, User
+from models.postgres_models import User
 from schemas.user import UserCreate
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,6 @@ class AuthService:
         self.session.add(user)
         await self.session.flush()
         await self.session.refresh(user)
-        await self.session.commit()
         logger.info("user registered: %s", user.email)
         return user
 
@@ -41,12 +40,3 @@ class AuthService:
     async def get_user(self, user_id: str) -> User | None:
         result = await self.session.execute(select(User).where(User.id == user_id))
         return result.scalar_one_or_none()
-
-    async def create_project(
-        self, user_id: str, name: str, description: str | None = None
-    ) -> Project:
-        project = Project(owner_id=user_id, name=name, description=description)
-        self.session.add(project)
-        await self.session.flush()
-        await self.session.refresh(project)
-        return project

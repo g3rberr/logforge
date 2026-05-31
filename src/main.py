@@ -1,3 +1,6 @@
+from contextlib import asynccontextmanager, suppress
+from typing import Any
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -9,7 +12,16 @@ from api.v1.users import router as users_router
 from core.config import settings
 from database.clickhouse import ch_client
 
-app = FastAPI(title="logforge", version="0.1.0")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> Any:  # noqa: ANN401
+    with suppress(Exception):
+        ch_client.connect()
+    yield
+    ch_client.close()
+
+
+app = FastAPI(title="logforge", version="0.1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,16 +30,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.on_event("startup")
-def startup() -> None:
-    ch_client.connect()
-
-
-@app.on_event("shutdown")
-def shutdown() -> None:
-    ch_client.close()
 
 
 app.include_router(auth_router, prefix="/api/v1")

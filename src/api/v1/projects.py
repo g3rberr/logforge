@@ -104,5 +104,4 @@ async def regenerate_key(
     new_key = await repo.regenerate_api_key(project_id)
     if new_key is None:
         raise HTTPException(status_code=404, detail="project not found")
-    project.api_key = new_key
     return _project_to_read(project)
