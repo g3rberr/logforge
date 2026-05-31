@@ -1,3 +1,5 @@
+import json
+
 from fastapi import APIRouter, Depends, Header, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -33,7 +35,9 @@ async def ingest(
         timestamp=data.timestamp,
     )
 
-    ch.insert(LogEntry.__table__, [entry.to_dict()])
+    row = entry.to_dict()
+    row["metadata"] = json.dumps(row["metadata"])
+    ch.insert(LogEntry.__table__, [row])
 
     return LogEntryRead(
         id=entry.id,
