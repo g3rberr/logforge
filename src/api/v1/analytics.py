@@ -34,11 +34,16 @@ async def search_logs(
         raise HTTPException(status_code=404, detail="project not found")
 
     filters = LogEntryFilters(
-        level=level, source=source, search=search, from_date=from_date, to_date=to_date,
-        limit=limit, offset=offset,
+        level=level,
+        source=source,
+        search=search,
+        from_date=from_date,
+        to_date=to_date,
+        limit=limit,
+        offset=offset,
     )
     service = AnalyticsService(ch)
-    items, _ = service.search(project_id, filters)
+    items, _ = await service.search(project_id, filters)
     return [LogEntryRead(**item) for item in items]
 
 
@@ -58,4 +63,4 @@ async def get_stats(
         raise HTTPException(status_code=404, detail="project not found")
 
     service = AnalyticsService(ch)
-    return service.stats(project_id, LogEntryFilters(from_date=from_date, to_date=to_date))
+    return await service.stats(project_id, LogEntryFilters(from_date=from_date, to_date=to_date))
