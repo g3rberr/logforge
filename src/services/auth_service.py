@@ -27,6 +27,7 @@ class AuthService:
         self.session.add(user)
         await self.session.flush()
         await self.session.refresh(user)
+        await self.session.commit()
         logger.info("user registered: %s", user.email)
         return user
 

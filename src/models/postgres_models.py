@@ -1,20 +1,17 @@
 from datetime import datetime
 from uuid import uuid4
 
-from sqlalchemy import DateTime, String, Text, func
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import DateTime, ForeignKey, String, Text, Uuid, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-
-class Base(DeclarativeBase):
-    pass
+from database.postgres import Base
 
 
 class User(Base):
     __tablename__ = "users"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        Uuid(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
     )
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -32,9 +29,11 @@ class Project(Base):
     __tablename__ = "projects"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        Uuid(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
     )
-    owner_id: Mapped[str] = mapped_column(UUID(as_uuid=False), nullable=False, index=True)
+    owner_id: Mapped[str] = mapped_column(
+        Uuid(as_uuid=False), ForeignKey("users.id"), nullable=False, index=True
+    )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     api_key: Mapped[str] = mapped_column(
