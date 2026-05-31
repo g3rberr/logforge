@@ -1,3 +1,4 @@
+# ruff: noqa: B008
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -23,9 +24,9 @@ async def search_logs(
     to_date: datetime | None = None,
     limit: int = Query(50, ge=1, le=1000),
     offset: int = Query(0, ge=0),
-    current_user: User = Depends(get_current_user),  # noqa: B008
-    session: AsyncSession = Depends(get_session),  # noqa: B008
-    ch: ClickHouseClient = Depends(get_ch),  # noqa: B008
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+    ch: ClickHouseClient = Depends(get_ch),
 ) -> list[LogEntryRead]:
     result = await session.execute(
         select(Project).where(Project.id == project_id, Project.owner_id == current_user.id)
@@ -43,7 +44,7 @@ async def search_logs(
         offset=offset,
     )
     service = AnalyticsService(ch)
-    items, _ = service.search(project_id, filters)
+    items, _ = await service.search(project_id, filters)
     return [LogEntryRead(**item) for item in items]
 
 
@@ -52,9 +53,9 @@ async def get_stats(
     project_id: str = Query(...),
     from_date: datetime | None = None,
     to_date: datetime | None = None,
-    current_user: User = Depends(get_current_user),  # noqa: B008
-    session: AsyncSession = Depends(get_session),  # noqa: B008
-    ch: ClickHouseClient = Depends(get_ch),  # noqa: B008
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+    ch: ClickHouseClient = Depends(get_ch),
 ) -> LogEntryStats:
     result = await session.execute(
         select(Project).where(Project.id == project_id, Project.owner_id == current_user.id)
@@ -63,4 +64,4 @@ async def get_stats(
         raise HTTPException(status_code=404, detail="project not found")
 
     service = AnalyticsService(ch)
-    return service.stats(project_id, LogEntryFilters(from_date=from_date, to_date=to_date))
+    return await service.stats(project_id, LogEntryFilters(from_date=from_date, to_date=to_date))

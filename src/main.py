@@ -1,3 +1,4 @@
+# ruff: noqa: ANN401
 from contextlib import asynccontextmanager, suppress
 from typing import Any
 
@@ -14,7 +15,7 @@ from database.clickhouse import ch_client
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> Any:  # noqa: ANN401
+async def lifespan(app: FastAPI) -> Any:
     with suppress(Exception):
         ch_client.connect()
     yield

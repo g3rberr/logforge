@@ -10,15 +10,15 @@ class LogRepository:
     def __init__(self, ch: ClickHouseClient) -> None:
         self._ch = ch
 
-    def insert_batch(self, entries: list[LogEntry]) -> None:
+    async def insert_batch(self, entries: list[LogEntry]) -> None:
         data = []
         for e in entries:
             record = e.to_dict()
             record["metadata"] = json.dumps(record["metadata"])
             data.append(record)
-        self._ch.insert(LogEntry.__table__, data)
+        await self._ch.insert(LogEntry.__table__, data)
 
-    def search(
+    async def search(
         self,
         project_id: str,
         level: str | None = None,
@@ -50,12 +50,12 @@ class LogRepository:
 
         where = " AND ".join(conditions)
 
-        count_result = self._ch.execute(
+        count_result = await self._ch.execute(
             f"SELECT count() as cnt FROM {LogEntry.__table__} WHERE {where}", params
         )
         total = count_result[0]["cnt"] if count_result else 0
 
-        rows = self._ch.execute(
+        rows = await self._ch.execute(
             f"SELECT * FROM {LogEntry.__table__} WHERE {where} "
             f"ORDER BY timestamp DESC LIMIT %(limit)s OFFSET %(offset)s",
             {**params, "limit": limit, "offset": offset},
@@ -69,7 +69,7 @@ class LogRepository:
 
         return items, total
 
-    def get_stats(
+    async def get_stats(
         self,
         project_id: str,
         from_date: datetime | None = None,
@@ -87,12 +87,12 @@ class LogRepository:
 
         where = " AND ".join(conditions)
 
-        count_result = self._ch.execute(
+        count_result = await self._ch.execute(
             f"SELECT count() as cnt FROM {LogEntry.__table__} WHERE {where}", params
         )
         total = count_result[0]["cnt"] if count_result else 0
 
-        by_level = self._ch.execute(
+        by_level = await self._ch.execute(
             f"SELECT level, count() as cnt FROM {LogEntry.__table__} WHERE {where} GROUP BY level",
             params,
         )

@@ -1,6 +1,8 @@
+# ruff: noqa: B008
 from collections.abc import AsyncGenerator
 
-from fastapi import Depends, Header, HTTPException
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -10,7 +12,8 @@ from database.postgres import get_session as _get_session
 from models.postgres_models import User
 
 get_session = _get_session
-__all__ = ["get_ch", "get_current_user", "get_session"]
+
+security = HTTPBearer(auto_error=False)
 
 
 async def get_ch() -> AsyncGenerator[ClickHouseClient, None]:
@@ -18,20 +21,16 @@ async def get_ch() -> AsyncGenerator[ClickHouseClient, None]:
 
 
 async def get_current_user(
-    authorization: str = Header(...),
-    session: AsyncSession = Depends(get_session),  # noqa: B008
+    credentials: HTTPAuthorizationCredentials | None = Depends(security),
+    session: AsyncSession = Depends(get_session),
 ) -> User:
-    if not authorization.startswith("Bearer "):
+    if credentials is None:
         raise HTTPException(status_code=401, detail="invalid token format")
-
-    token = authorization.removeprefix("Bearer ")
-    user_id = decode_token(token)
+    user_id = decode_token(credentials.credentials)
     if user_id is None:
         raise HTTPException(status_code=401, detail="invalid or expired token")
-
     result = await session.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
     if user is None:
         raise HTTPException(status_code=401, detail="user not found")
-
     return user

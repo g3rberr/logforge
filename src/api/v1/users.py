@@ -1,3 +1,4 @@
+# ruff: noqa: B008
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,7 +12,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 @router.get("/me", response_model=UserRead)
 async def get_me(
-    user: User = Depends(get_current_user),  # noqa: B008
+    user: User = Depends(get_current_user),
 ) -> UserRead:
     return UserRead(
         id=user.id,
@@ -24,8 +25,8 @@ async def get_me(
 @router.put("/me", response_model=UserRead)
 async def update_me(
     data: UserUpdate,
-    user: User = Depends(get_current_user),  # noqa: B008
-    session: AsyncSession = Depends(get_session),  # noqa: B008
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
 ) -> UserRead:
     if data.name is not None:
         user.name = data.name

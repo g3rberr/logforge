@@ -9,8 +9,10 @@ class AnalyticsService:
     def __init__(self, ch: ClickHouseClient) -> None:
         self._repo = LogRepository(ch)
 
-    def search(self, project_id: str, filters: LogEntryFilters) -> tuple[list[dict[str, Any]], int]:
-        return self._repo.search(
+    async def search(
+        self, project_id: str, filters: LogEntryFilters
+    ) -> tuple[list[dict[str, Any]], int]:
+        return await self._repo.search(
             project_id,
             level=filters.level,
             source=filters.source,
@@ -21,8 +23,8 @@ class AnalyticsService:
             offset=filters.offset,
         )
 
-    def stats(self, project_id: str, filters: LogEntryFilters) -> LogEntryStats:
-        raw = self._repo.get_stats(
+    async def stats(self, project_id: str, filters: LogEntryFilters) -> LogEntryStats:
+        raw = await self._repo.get_stats(
             project_id,
             from_date=filters.from_date,
             to_date=filters.to_date,

@@ -1,3 +1,4 @@
+# ruff: noqa: B008
 import json
 
 from fastapi import APIRouter, Depends, Header, HTTPException
@@ -17,8 +18,8 @@ router = APIRouter(prefix="/ingest", tags=["ingest"])
 async def ingest(
     data: LogEntryCreate,
     x_api_key: str = Header(...),
-    session: AsyncSession = Depends(get_session),  # noqa: B008
-    ch: ClickHouseClient = Depends(get_ch),  # noqa: B008
+    session: AsyncSession = Depends(get_session),
+    ch: ClickHouseClient = Depends(get_ch),
 ) -> LogEntryRead:
     result = await session.execute(select(Project).where(Project.api_key == x_api_key))
     project = result.scalar_one_or_none()
@@ -37,7 +38,7 @@ async def ingest(
 
     row = entry.to_dict()
     row["metadata"] = json.dumps(row["metadata"])
-    ch.insert(LogEntry.__table__, [row])
+    await ch.insert(LogEntry.__table__, [row])
 
     return LogEntryRead(
         id=entry.id,
