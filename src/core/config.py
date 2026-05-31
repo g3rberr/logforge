@@ -26,6 +26,3 @@ settings = Settings()
 
 if settings.jwt_secret == "change-me-in-production":
     logger.warning("jwt_secret is set to the default value; change it in production")
-
-
-settings = Settings()
