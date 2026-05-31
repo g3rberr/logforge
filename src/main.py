@@ -14,6 +14,11 @@ def startup() -> None:
     ch_client.connect()
 
 
+@app.on_event("shutdown")
+def shutdown() -> None:
+    ch_client.close()
+
+
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(ingest_router, prefix="/api/v1")
 app.include_router(analytics_router, prefix="/api/v1")
