@@ -1,5 +1,3 @@
-import logging
-
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -7,11 +5,9 @@ from core.security import create_token, hash_password, verify_password
 from models.postgres_models import User
 from schemas.user import UserCreate
 
-logger = logging.getLogger(__name__)
-
 
 class AuthService:
-    def __init__(self, session: AsyncSession) -> None:
+    def __init__(self, session: AsyncSession):
         self.session = session
 
     async def register(self, data: UserCreate) -> User:
@@ -27,7 +23,6 @@ class AuthService:
         self.session.add(user)
         await self.session.flush()
         await self.session.refresh(user)
-        logger.info("user registered: %s", user.email)
         return user
 
     async def login(self, email: str, password: str) -> str:

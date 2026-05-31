@@ -1,5 +1,4 @@
 from contextlib import asynccontextmanager, suppress
-from typing import Any
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,7 +13,7 @@ from database.clickhouse import ch_client
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> Any:  # noqa: ANN401
+async def lifespan(app: FastAPI):
     with suppress(Exception):
         ch_client.connect()
     yield
@@ -30,7 +29,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(ingest_router, prefix="/api/v1")

@@ -17,9 +17,9 @@ router = APIRouter(prefix="/ingest", tags=["ingest"])
 async def ingest(
     data: LogEntryCreate,
     x_api_key: str = Header(...),
-    session: AsyncSession = Depends(get_session),  # noqa: B008
-    ch: ClickHouseClient = Depends(get_ch),  # noqa: B008
-) -> LogEntryRead:
+    session: AsyncSession = Depends(get_session),
+    ch: ClickHouseClient = Depends(get_ch),
+):
     result = await session.execute(select(Project).where(Project.api_key == x_api_key))
     project = result.scalar_one_or_none()
     if project is None:

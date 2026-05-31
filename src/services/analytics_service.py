@@ -6,7 +6,7 @@ from schemas.log import LogEntryFilters, LogEntryStats
 
 
 class AnalyticsService:
-    def __init__(self, ch: ClickHouseClient) -> None:
+    def __init__(self, ch: ClickHouseClient):
         self._repo = LogRepository(ch)
 
     async def search(

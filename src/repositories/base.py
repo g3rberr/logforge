@@ -9,7 +9,7 @@ ModelT = TypeVar("ModelT", bound=DeclarativeBase)
 
 
 class BaseRepository(Generic[ModelT]):
-    def __init__(self, session: AsyncSession) -> None:
+    def __init__(self, session: AsyncSession):
         self.session = session
 
     @property

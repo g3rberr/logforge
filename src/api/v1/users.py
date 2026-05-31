@@ -11,8 +11,8 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 @router.get("/me", response_model=UserRead)
 async def get_me(
-    user: User = Depends(get_current_user),  # noqa: B008
-) -> UserRead:
+    user: User = Depends(get_current_user),
+):
     return UserRead(
         id=user.id,
         email=user.email,
@@ -24,9 +24,9 @@ async def get_me(
 @router.put("/me", response_model=UserRead)
 async def update_me(
     data: UserUpdate,
-    user: User = Depends(get_current_user),  # noqa: B008
-    session: AsyncSession = Depends(get_session),  # noqa: B008
-) -> UserRead:
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
     if data.name is not None:
         user.name = data.name
     if data.password is not None:

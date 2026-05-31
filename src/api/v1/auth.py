@@ -9,7 +9,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/register", response_model=UserRead, status_code=201)
-async def register(data: UserCreate, session: AsyncSession = Depends(get_session)) -> UserRead:  # noqa: B008
+async def register(data: UserCreate, session: AsyncSession = Depends(get_session)):
     service = AuthService(session)
     try:
         user = await service.register(data)
@@ -24,7 +24,7 @@ async def register(data: UserCreate, session: AsyncSession = Depends(get_session
 
 
 @router.post("/login", response_model=TokenResponse)
-async def login(data: UserLogin, session: AsyncSession = Depends(get_session)) -> TokenResponse:  # noqa: B008
+async def login(data: UserLogin, session: AsyncSession = Depends(get_session)):
     service = AuthService(session)
     try:
         token = await service.login(data.email, data.password)

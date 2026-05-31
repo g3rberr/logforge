@@ -10,10 +10,10 @@ logger = logging.getLogger(__name__)
 
 
 class ClickHouseClient:
-    def __init__(self) -> None:
+    def __init__(self):
         self._client: Any = None
 
-    def connect(self) -> None:
+    def connect(self):
         self._client = _CHClient(
             host=settings.clickhouse_host,
             port=settings.clickhouse_port,
@@ -23,13 +23,13 @@ class ClickHouseClient:
         )
         logger.info("connected to clickhouse")
 
-    def close(self) -> None:
+    def close(self):
         if self._client:
             self._client.disconnect()
             self._client = None
 
     @property
-    def client(self) -> Any:  # noqa: ANN401
+    def client(self):
         if self._client is None:
             raise RuntimeError("ClickHouse not connected")
         return self._client

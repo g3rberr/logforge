@@ -23,10 +23,10 @@ async def search_logs(
     to_date: datetime | None = None,
     limit: int = Query(50, ge=1, le=1000),
     offset: int = Query(0, ge=0),
-    current_user: User = Depends(get_current_user),  # noqa: B008
-    session: AsyncSession = Depends(get_session),  # noqa: B008
-    ch: ClickHouseClient = Depends(get_ch),  # noqa: B008
-) -> list[LogEntryRead]:
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+    ch: ClickHouseClient = Depends(get_ch),
+):
     result = await session.execute(
         select(Project).where(Project.id == project_id, Project.owner_id == current_user.id)
     )
@@ -52,10 +52,10 @@ async def get_stats(
     project_id: str = Query(...),
     from_date: datetime | None = None,
     to_date: datetime | None = None,
-    current_user: User = Depends(get_current_user),  # noqa: B008
-    session: AsyncSession = Depends(get_session),  # noqa: B008
-    ch: ClickHouseClient = Depends(get_ch),  # noqa: B008
-) -> LogEntryStats:
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+    ch: ClickHouseClient = Depends(get_ch),
+):
     result = await session.execute(
         select(Project).where(Project.id == project_id, Project.owner_id == current_user.id)
     )

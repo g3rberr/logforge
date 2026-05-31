@@ -10,7 +10,6 @@ from database.postgres import get_session as _get_session
 from models.postgres_models import User
 
 get_session = _get_session
-__all__ = ["get_ch", "get_current_user", "get_session"]
 
 
 async def get_ch() -> AsyncGenerator[ClickHouseClient, None]:
@@ -19,7 +18,7 @@ async def get_ch() -> AsyncGenerator[ClickHouseClient, None]:
 
 async def get_current_user(
     authorization: str = Header(...),
-    session: AsyncSession = Depends(get_session),  # noqa: B008
+    session: AsyncSession = Depends(get_session),
 ) -> User:
     if not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="invalid token format")

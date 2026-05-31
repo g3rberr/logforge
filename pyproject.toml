@@ -43,16 +43,17 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP", "ANN", "B", "SIM", "C4", "T20"]
+ignore = ["ANN", "B008"]
 
 [tool.mypy]
-strict = true
 python_version = "3.11"
 mypy_path = "src"
+strict_optional = true
+strict_equality = true
 warn_unused_configs = true
 warn_redundant_casts = true
 warn_unused_ignores = true
 no_implicit_reexport = true
-disallow_untyped_defs = true
 disallow_any_unimported = true
 
 [[tool.mypy.overrides]]

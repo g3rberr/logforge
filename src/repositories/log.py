@@ -7,7 +7,7 @@ from models.clickhouse_models import LogEntry
 
 
 class LogRepository:
-    def __init__(self, ch: ClickHouseClient) -> None:
+    def __init__(self, ch: ClickHouseClient):
         self._ch = ch
 
     async def insert_batch(self, entries: list[LogEntry]) -> None:

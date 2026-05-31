@@ -23,9 +23,9 @@ def _project_to_read(project: Project) -> ProjectRead:
 @router.post("", response_model=ProjectRead, status_code=201)
 async def create_project(
     data: ProjectCreate,
-    user: User = Depends(get_current_user),  # noqa: B008
-    session: AsyncSession = Depends(get_session),  # noqa: B008
-) -> ProjectRead:
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
     repo = ProjectRepository(session)
     project = Project(
         owner_id=user.id,
@@ -38,9 +38,9 @@ async def create_project(
 
 @router.get("", response_model=list[ProjectRead])
 async def list_projects(
-    user: User = Depends(get_current_user),  # noqa: B008
-    session: AsyncSession = Depends(get_session),  # noqa: B008
-) -> list[ProjectRead]:
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
     repo = ProjectRepository(session)
     projects, _ = await repo.list(filters={"owner_id": user.id})
     return [_project_to_read(p) for p in projects]
@@ -49,9 +49,9 @@ async def list_projects(
 @router.get("/{project_id}", response_model=ProjectRead)
 async def get_project(
     project_id: str,
-    user: User = Depends(get_current_user),  # noqa: B008
-    session: AsyncSession = Depends(get_session),  # noqa: B008
-) -> ProjectRead:
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
     repo = ProjectRepository(session)
     project = await repo.get(project_id)
     if project is None or project.owner_id != user.id:
@@ -63,9 +63,9 @@ async def get_project(
 async def update_project(
     project_id: str,
     data: ProjectUpdate,
-    user: User = Depends(get_current_user),  # noqa: B008
-    session: AsyncSession = Depends(get_session),  # noqa: B008
-) -> ProjectRead:
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
     repo = ProjectRepository(session)
     project = await repo.get(project_id)
     if project is None or project.owner_id != user.id:
@@ -81,9 +81,9 @@ async def update_project(
 @router.delete("/{project_id}", status_code=204)
 async def delete_project(
     project_id: str,
-    user: User = Depends(get_current_user),  # noqa: B008
-    session: AsyncSession = Depends(get_session),  # noqa: B008
-) -> None:
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
     repo = ProjectRepository(session)
     project = await repo.get(project_id)
     if project is None or project.owner_id != user.id:
@@ -94,9 +94,9 @@ async def delete_project(
 @router.post("/{project_id}/regenerate-key", response_model=ProjectRead)
 async def regenerate_key(
     project_id: str,
-    user: User = Depends(get_current_user),  # noqa: B008
-    session: AsyncSession = Depends(get_session),  # noqa: B008
-) -> ProjectRead:
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
     repo = ProjectRepository(session)
     project = await repo.get(project_id)
     if project is None or project.owner_id != user.id:

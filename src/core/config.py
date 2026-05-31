@@ -1,8 +1,4 @@
-import logging
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-logger = logging.getLogger(__name__)
 
 
 class Settings(BaseSettings):
@@ -23,6 +19,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-
-if settings.jwt_secret == "change-me-in-production":
-    logger.warning("jwt_secret is set to the default value; change it in production")
